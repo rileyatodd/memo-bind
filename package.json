@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/rileyatodd/memo-bind/issues"
   },
-  "homepage": "https://github.com/rileyatodd/memo-bind#readme"
+  "homepage": "https://github.com/rileyatodd/memo-bind#readme",
+  "devDependencies": {
+    "babel-eslint": "^7.2.3"
+  }
 }
