@@ -1,0 +1,26 @@
+{
+  "name": "memo-bind",
+  "version": "1.0.0",
+  "description": "\"Memoized binding of function arguments\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rileyatodd/memo-bind.git"
+  },
+  "keywords": [
+    "memoization",
+    "bind",
+    "binding",
+    "react",
+    "preact"
+  ],
+  "author": "Riley Todd <rileyatodd@gmail.com> (http://rileyatodd.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rileyatodd/memo-bind/issues"
+  },
+  "homepage": "https://github.com/rileyatodd/memo-bind#readme"
+}
