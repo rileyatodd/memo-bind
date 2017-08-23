@@ -53,4 +53,5 @@ class MyUserList extends Component {
       </div>
     )
   }
+}
 ```
