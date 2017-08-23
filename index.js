@@ -12,9 +12,9 @@ function setInCache(map, x, key, ...path) {
 
 export default function memoBind(cache, f, ...args) {
   if (cache.constructor.name !== "Map") throw "Please provide an ES6 Map as the cache"
-  let existingFn = getInCache(this.memo_map, f, ...args)
+  let existingFn = getInCache(cache, f, ...args)
   if (existingFn) return existingFn
   let newFn = (...extraArgs) => f(...args, ...extraArgs)
-  setInCache(this.memo_map, newFn, f, ...args)
+  setInCache(cache, newFn, f, ...args)
   return newFn
 }
