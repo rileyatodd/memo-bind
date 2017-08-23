@@ -13,7 +13,7 @@ instead, but sometimes that is a bit cumbersome.
     {items.map(x => (
       <div class="item">
         {item.name}
-        <button onClick={memo-bind(this.deleteItem, item.id)}>
+        <button onClick={memoBind(this.deleteItem, item.id)}>
           Delete
         </button>
       </div>
