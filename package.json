@@ -1,6 +1,6 @@
 {
   "name": "memo-bind",
-  "version": "1.0.0",
+  "version": "1.1",
   "description": "\"Memoized binding of function arguments\"",
   "main": "index.js",
   "scripts": {
