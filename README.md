@@ -8,10 +8,14 @@ You can use memo-bind to prevent allocating a new function on each render when a
 
 ## Example Usage
 memo-bind exports two functions, partial and bind. The only difference between the two is that bind takes a thisArg
-`import { partial, bind } from 'memo-bind'`
-`let cache = new Map()`
-`memoizedFn = bind(cache, thisArg, fn, ...argumentsToBind)`
-`memoizedFn = partial(cache, fn, ...argumentsToBind)`
+```
+import { partial, bind } from 'memo-bind'
+//...
+let cache = new Map()
+//...
+let memoizedFn = bind(cache, thisArg, fn, ...argumentsToBind)
+let memoizedFn2 = partial(cache, fn, ...argumentsToBind)
+```
 
 memo-bind does not initiate its own cache. This makes it easier for the user to control the lifecycle of the cache, destroying it, clearing it, or replacing it whenever and however they want.
 *You must provide an ES6 Map as the cache for memo-bind.*
