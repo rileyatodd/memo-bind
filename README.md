@@ -14,7 +14,7 @@ memo-bind does not initiate its own cache. This makes it easier for the user to 
 
 ## Example usage with React / Preact
 ```
-import memoBind from 'memo-bind'
+import {bind, partial} from 'memo-bind'
 
 class MyUserList extends Component {
 
@@ -25,12 +25,22 @@ class MyUserList extends Component {
     ]
   }
 
-  // This is the function that needs an argument bound to it
+  // This is a function that needs this and an argument bound to it
   deleteItem(id) {
     let {items} = this.state
     let deletionIndex = items.findIndex(item => item.id === id)
     if (deletionIndex > -1) {
       this.setState({items: items.splice(deletionIndex, 1)})
+    }
+  }
+
+  // This is a function that only needs an argument bound, but not the thisArg
+  capitalize = item => {
+    let {items} = this.state
+    let itemIndex = items.findIndex(x => x.id === item.id)
+    if (itemIndex > -1) {
+      item.name = item.name.toUpperCase()
+      this.setState({items: items.splice(itemIndex, 1, item)})
     }
   }
 
@@ -45,10 +55,13 @@ class MyUserList extends Component {
 
     return (
       <div class="container">
-        {items.map(x => (
+        {items.map(item => (
           <div class="item">
             {item.name}
-            <button onClick={memoBind(this.fnCache, this.deleteItem, item.id)}>
+            <button onClick={partial(this.capitalizeName, item)}>
+              Capitalize
+            </button>
+            <button onClick={bind(this.fnCache, this.deleteItem, this, item.id)}>
               Delete
             </button>
           </div>

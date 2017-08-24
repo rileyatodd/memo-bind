@@ -10,11 +10,20 @@ function setInCache(map, x, key, ...path) {
   return setInCache(map.get(key), x, ...path)
 }
 
-export default function memoBind(cache, f, ...args) {
+export function partial(cache, f, ...args) {
   if (cache.constructor.name !== "Map") throw "Please provide an ES6 Map as the cache"
   let existingFn = getInCache(cache, f, ...args)
   if (existingFn) return existingFn
   let newFn = (...extraArgs) => f(...args, ...extraArgs)
   setInCache(cache, newFn, f, ...args)
   return newFn
+}
+
+export function bind(cache, f, self, ...args) {
+ if (cache.constructor.name !== "Map") throw "Please provide an ES6 Map as the cache"
+ let existingFn = getInCache(cache, f, self, ...args)
+ if (existingFn) return existingFn
+ let newFn = f.bind(self, ...args)
+ setInCache(cache, newFn, f, self, ...args)
+ return newFn 
 }
