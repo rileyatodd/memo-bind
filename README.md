@@ -1,6 +1,8 @@
 # memo-bind
 Memoized binding of functions to arguments. Very useful for React and Preact!
 
+# **WARNING: This package has not yet stabilized, (althought it's pretty small and will likely be stable within a week or two.) USE AT YOUR OWN RISK. The concept is pretty simple though, please contribute if you think you can improve it somehow! I'll look at all pull requests while the volume of them is still low =) ** 
+
 You can use memo-bind to prevent allocating a new function on each render when all you want to do is bind a value as an argument to a function. The standard way to avoid this is  to break out a child component and bind the value to that instead, but sometimes that is a bit cumbersome. By using memo-bind you can avoid having to refactor too much, while also avoiding unnecessary function allocations and unnecessary renders.
 
 ## Installation
