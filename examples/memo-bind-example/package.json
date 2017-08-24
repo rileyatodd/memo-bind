@@ -1,0 +1,30 @@
+{
+  "name": "memo-bind-example",
+  "version": "1.0.0",
+  "description": "Example usages of memo-bind",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint src && preact test",
+    "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
+    "build": "preact build",
+    "serve": "preact build && preact serve",
+    "dev": "preact watch"
+  },
+  "keywords": [
+    "memo-bind",
+    "example",
+    "memoization",
+    "binding"
+  ],
+  "author": "Riley Todd <rileyatodd@gmail.com> (http://rileyatodd.com)",
+  "license": "ISC",
+  "devDependencies": {
+    "if-env": "^1.0.0",
+    "preact-cli": "^1.4.1"
+  },
+  "dependencies": {
+    "memo-bind": "^2.0.0",
+    "preact": "^8.2.1",
+    "preact-compat": "^3.17.0"
+  }
+}
