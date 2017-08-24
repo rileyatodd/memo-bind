@@ -1,49 +1,67 @@
 # memo-bind
 Memoized binding of functions to arguments. Very useful for React and Preact!
 
-# **WARNING: This package has not yet stabilized, (althought it's pretty small and will likely be stable within a week or two.) USE AT YOUR OWN RISK. The concept is pretty simple though, please contribute if you think you can improve it somehow! I'll look at all pull requests while the volume of them is still low =) ** 
-
 You can use memo-bind to prevent allocating a new function on each render when all you want to do is bind a value as an argument to a function. The standard way to avoid this is  to break out a child component and bind the value to that instead, but sometimes that is a bit cumbersome. By using memo-bind you can avoid having to refactor too much, while also avoiding unnecessary function allocations and unnecessary renders.
 
 ## Installation
 `npm i memo-bind`
 
 ## Example Usage
-`memoBind(cache, fn, ...argumentsToBind)`
+memo-bind exports two functions, partial and bind. The only difference between the two is that bind takes a thisArg
+`import { partial, bind } from 'memo-bind'`
+`let cache = new Map()`
+`memoizedFn = bind(cache, thisArg, fn, ...argumentsToBind)`
+`memoizedFn = partial(cache, fn, ...argumentsToBind)`
 
 memo-bind does not initiate its own cache. This makes it easier for the user to control the lifecycle of the cache, destroying it, clearing it, or replacing it whenever and however they want.
-*You must provide a ES6 Map as the cache for memo-bind.*
+*You must provide an ES6 Map as the cache for memo-bind.*
 
 ## Example usage with React / Preact
+Note that the counter feature also demonstrates that these bindings functions avoid reallocting functions on each render. You should only see one log in the console.
+
 ```
-import {bind, partial} from 'memo-bind'
+import { h, Component } from 'preact'
+import style from './style'
 
-class MyUserList extends Component {
+import { partial, bind } from 'memo-bind'
 
+export default class Example extends Component {
   state = {
-    items: [
-      {name: "item 1", id: 1},
-      {name: "item 2", id: 2}
-    ]
+    items: {
+      1: {name: "item 1", id: '1'},
+      2: {name: "item 2", id: '2'}
+    },
+    count: 0
   }
 
-  // This is a function that needs this and an argument bound to it
+  componentDidMount() {
+    this.interval = setInterval(
+      () => this.setState(state => ({count: state.count + 1})), 
+      1000
+    )
+  }
+
+  multiply = factor => this.setState(
+    state => ({count: state.count * factor}))
+
+  // This is a function that needs the thisArg and an additional argument bound to it
   deleteItem(id) {
-    let {items} = this.state
-    let deletionIndex = items.findIndex(item => item.id === id)
-    if (deletionIndex > -1) {
-      this.setState({items: items.splice(deletionIndex, 1)})
+    // A little helper for making mutation free updates
+    function omit(key, obj) {
+      return Object.assign({}, 
+                           ...Object.keys(obj)
+                                    .filter(k => k !== key)
+                                    .map(k => ({[k]: obj[k]})))
     }
+    this.setState({items: omit(id, this.state.items)})
   }
 
   // This is a function that only needs an argument bound, but not the thisArg
-  capitalize = item => {
+  capitalizeName = item => {
     let {items} = this.state
-    let itemIndex = items.findIndex(x => x.id === item.id)
-    if (itemIndex > -1) {
-      item.name = item.name.toUpperCase()
-      this.setState({items: items.splice(itemIndex, 1, item)})
-    }
+    this.setState(state => Object.assign(items, {
+      [item.id]: Object.assign(item, {name: item.name.toUpperCase()})
+    }))
   }
 
   // If you declare the cache as a property of the component then
@@ -52,22 +70,32 @@ class MyUserList extends Component {
   // cache sizes
   fnCache = new Map()
 
-  render() {
-    let {items} =  this.state
+  render({}, { items, count }) {
+    //Normally you would just stick this straight into the jsx but we need 
+    //to save the result for demonstration purposes
+    let double = partial(this.fnCache, this.multiply, 2)
+    if (this.double !== double) {
+      this.double = double
+      console.log('created new double function')
+    }
 
     return (
-      <div class="container">
-        {items.map(item => (
-          <div class="item">
+      <div class={style.container}>
+        <button onClick={double}>Double</button>
+        <div class={style.counter}>{count}</div>
+        {Object.keys(items).map(itemId => {
+          let item = items[itemId]
+          return (
+          <div class={style.item}>
             {item.name}
-            <button onClick={partial(this.capitalizeName, item)}>
+            <button onClick={partial(this.fnCache, this.capitalizeName, item)}>
               Capitalize
             </button>
             <button onClick={bind(this.fnCache, this.deleteItem, this, item.id)}>
               Delete
             </button>
           </div>
-        ))}
+        )})}
       </div>
     )
   }
